@@ -1,8 +1,3 @@
-const ManageSchedule = () => {
-  return <div style={{ height: 700 }}></div>;
-};
-
-export default ManageSchedule;
 import React from "react";
 import events from "./events";
 import { Calendar, momentLocalizer } from "react-big-calendar";
