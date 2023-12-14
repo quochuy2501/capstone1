@@ -22,7 +22,7 @@ function formatVietnameseMoney(number) {
   const formattedNumber = parseFloat(numberString).toLocaleString('vi-VN');
   // Thêm đơn vị tiền tệ (đồng)
   return formattedNumber + ' đồng';
-}
+}``
 
 const History = () => {
   const [history, setHistory] = useState([]);
