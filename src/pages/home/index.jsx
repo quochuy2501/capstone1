@@ -5,8 +5,6 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const HomePage = () => {
   const { user } = useGlobalContext();
-  console.log(user.role, "user.role");
-
   let content;
   if (user.role === "2") content = <Admin />;
   if (user.role === "1") content = <Owner />;

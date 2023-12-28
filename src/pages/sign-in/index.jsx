@@ -1,104 +1,123 @@
-import { useState, useEffect } from "react";
-import { Form, Input, Button } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import useAxios from "../../hooks/useAxios";
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { setCookie } from "../../configs/cookie";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { Form, Input, Button, notification } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import useAxios from '../../hooks/useAxios';
+import { useGlobalContext } from '../../contexts/GlobalContext';
+import { setCookie } from '../../configs/cookie';
+import { useNavigate } from 'react-router-dom';
 
-import "./style.css";
+import './style.css';
 
 const SignInPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const { user, setUser } = useGlobalContext();
+  const { getUser } = useGlobalContext();
+  const [apiToast, contextHolder] = notification.useNotification();
   const { api, setAccessToken } = useAxios();
   const navigate = useNavigate();
 
+  const openNotification = (message, description, type) => {
+    apiToast[type]({
+      message,
+      description,
+      placement: 'topRight'
+    });
+  };
+
   const onFinish = async () => {
     try {
-      const { data } = await api.post("/login", {
+      const { data } = await api.post('/login', {
         email,
-        password,
+        password
       });
-
-      setUser({ ...user, role: "2" });
-      setCookie("access_token", data.token);
+      setCookie('access_token', data.token);
       setAccessToken(data.token);
-      navigate("/");
+      getUser(false);
+      navigate('/');
+      localStorage.setItem('login-success', 'true');
     } catch (error) {
-      console.log(error.response.data.errors);
+      if (error.response.data.error === 'Email or password is not correct') {
+        openNotification(
+          'Đăng nhập thất bại!',
+          'Sai email hoặc mật khẩu',
+          'error'
+        );
+      }
+      if (error.response.data.error === 'Your account has been locked') {
+        openNotification(
+          'Đăng nhập thất bại!',
+          'Tài khoản của bạn đã bị khoá',
+          'error'
+        );
+      }
     }
   };
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await api.get("/me");
-        console.log(data);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
 
   return (
-    <div className="login-form-wrapper">
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-      >
-        <Form.Item
-          name="Email"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập email!",
-            },
-          ]}
+    <>
+      {contextHolder}
+      <div className="login-form-wrapper">
+        <img
+          src="https://makan.vn/wp-content/uploads/2022/11/logo-da-banh-vector-1.jpg"
+          style={{ width: '200px', height: '150px', marginBottom: '40px' }}
+        />
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{
+            remember: true
+          }}
+          onFinish={onFinish}
         >
-          <Input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
-          />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mật khẩu!",
-            },
-          ]}
-        >
-          <Input
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Mật khẩu"
-          />
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
+          <Form.Item
+            name="Email"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng nhập email!'
+              }
+            ]}
           >
-            Log in
-          </Button>
-          Or <Link to="/sign-up">register now!</Link>
-        </Form.Item>
-      </Form>
-    </div>
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng nhập mật khẩu!'
+              }
+            ]}
+          >
+            <Input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Mật khẩu"
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="login-form-button"
+            >
+              Đăng nhập
+            </Button>
+            Hoặc <Link to="/sign-up">đăng ký ngay!</Link>
+          </Form.Item>
+        </Form>
+      </div>
+    </>
   );
 };
 
