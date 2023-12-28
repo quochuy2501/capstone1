@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Layout,
   Menu,
@@ -10,15 +9,14 @@ import {
   Input,
   Select,
   Radio,
-  notification,
-} from "antd";
-import { useGlobalContext } from "../../../contexts/GlobalContext";
-import { forgetCookie } from "../../../configs/cookie";
-import useAxios from "../../../hooks/useAxios";
+  notification
+} from 'antd';
+import { useGlobalContext } from '../../../contexts/GlobalContext';
+import { forgetCookie } from '../../../configs/cookie';
+import useAxios from '../../../hooks/useAxios';
 
 const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
   const { user, setUser, setDistrictsCxt } = useGlobalContext();
-  console.log(user, "user");
   const { Header, Sider, Content } = Layout;
   const [open, setOpen] = useState(false);
   const [districts, setDistricts] = useState([]);
@@ -38,11 +36,11 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await api.get("/get-districts");
+        const { data } = await api.get('/get-districts');
         const _data = data.districts.map((d) => {
           return {
             value: d.id,
-            label: d.name_district,
+            label: d.name_district
           };
         });
         setDistricts(_data);
@@ -54,7 +52,7 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
   }, []);
 
   useEffect(() => {
-    if (selectedDistrict === "") return;
+    if (selectedDistrict === '') return;
     (async () => {
       try {
         setLoading(true);
@@ -62,7 +60,7 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
         const _wards = data.wards.map((d) => {
           return {
             value: d.id,
-            label: d.name_ward,
+            label: d.name_ward
           };
         });
         setWards(_wards);
@@ -74,14 +72,14 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
   }, [selectedDistrict]);
 
   useEffect(() => {
-    if (user.role === "1" && user.address === "") {
+    if (user.role === '1' && user.address === '') {
       setOpen(true);
     }
   }, []);
 
   const handleLogout = () => {
-    forgetCookie("access_token");
-    setUser({ id: "", role: "", address: "" });
+    forgetCookie('access_token');
+    setUser({ id: '', role: '', address: '' });
   };
 
   const showModal = () => {
@@ -90,19 +88,19 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
 
   const handleOk = async () => {
     try {
-      await api.post("/owner/update-my-information", {
+      await api.post('/owner/update-my-information', {
         id: +user.id,
         full_name: fullName,
         email: email,
         phone: phone,
         id_district: selectedDistrict,
         id_ward: selectedWard,
-        address: address,
+        address: address
       });
       openNotification(
-        "Thông báo",
-        "Cập nhật thông tin thành công!",
-        "success"
+        'Thông báo',
+        'Cập nhật thông tin thành công!',
+        'success'
       );
       setUser({ ...user, address });
       setOpen(false);
@@ -114,9 +112,9 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
         error.response.data.errors.address
       ) {
         openNotification(
-          "Thông báo",
-          "Việc cập nhật thông tin cho lần đăng nhập đầu tiên là bắt buộc!",
-          "error"
+          'Thông báo',
+          'Việc cập nhật thông tin cho lần đăng nhập đầu tiên là bắt buộc!',
+          'error'
         );
       }
     }
@@ -124,7 +122,7 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
 
   const handleCancel = () => {
     console.log(user.address);
-    if (user.role === "1" && user.address === "") {
+    if (user.role === '1' && user.address === '') {
       return;
     }
     setOpen(false);
@@ -135,20 +133,20 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
   };
 
   const openNotification = (message, description, type) => {
-    if (type === "success") {
+    if (type === 'success') {
       apiNotification.success({
         message,
         description,
-        placement: "topRight",
-        duration: 2,
+        placement: 'topRight',
+        duration: 2
       });
     }
-    if (type === "error") {
+    if (type === 'error') {
       apiNotification.error({
         message,
         description,
-        placement: "topRight",
-        duration: 2,
+        placement: 'topRight',
+        duration: 2
       });
     }
   };
@@ -171,7 +169,7 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
           name="basic"
           autoComplete="off"
           layout="vertical"
-          style={{ marginTop: "10px" }}
+          style={{ marginTop: '10px' }}
         >
           <Form.Item
             label="Email"
@@ -179,13 +177,13 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập email!",
+                message: 'Vui lòng nhập email!'
               },
               {
                 pattern:
                   "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
-                message: "Email không đúng định dạng!",
-              },
+                message: 'Email không đúng định dạng!'
+              }
             ]}
           >
             <Input
@@ -200,8 +198,8 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập tên chủ sân bóng!",
-              },
+                message: 'Vui lòng nhập tên chủ sân bóng!'
+              }
             ]}
           >
             <Input
@@ -216,8 +214,8 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập địa chỉ sân bóng!",
-              },
+                message: 'Vui lòng nhập địa chỉ sân bóng!'
+              }
             ]}
           >
             <Input
@@ -232,8 +230,8 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập số điện thoại!",
-              },
+                message: 'Vui lòng nhập số điện thoại!'
+              }
             ]}
           >
             <Input
@@ -249,8 +247,8 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập quận!",
-              },
+                message: 'Vui lòng nhập quận!'
+              }
             ]}
           >
             <Select
@@ -268,15 +266,15 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
               rules={[
                 {
                   required: true,
-                  message: "Vui lòng nhập huyện!",
-                },
+                  message: 'Vui lòng nhập huyện!'
+                }
               ]}
             >
               <Radio.Group
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  gap: "7px",
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr 1fr',
+                  gap: '7px'
                 }}
                 defaultValue={selectedWard}
               >
@@ -297,7 +295,7 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
           )}
         </Form>
       </Modal>
-      <Layout style={{ height: "100vh" }}>
+      <Layout style={{ height: '100vh' }}>
         <Sider breakpoint="xl" collapsedWidth={70}>
           <div className="demo-logo-vertical" />
           <Menu
@@ -312,14 +310,14 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
           <Header
             style={{
               padding: 0,
-              background: "white",
-              display: "flex",
-              justifyContent: "flex-end",
-              paddingRight: "50px",
+              background: 'white',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingRight: '50px'
             }}
           >
             <Space size="middle">
-              {user.role !== "2" && (
+              {user.role !== '2' && (
                 <a role="button" onClick={showModal}>
                   Thông tin cá nhân
                 </a>
@@ -331,11 +329,11 @@ const DashBoardLayout = ({ children, items, selectedKey, setSelectedKey }) => {
           </Header>
           <Content
             style={{
-              margin: "24px 16px",
+              margin: '24px 16px',
               padding: 24,
               minHeight: 280,
-              background: "white",
-              overflow: "scroll",
+              background: 'white',
+              overflow: 'scroll'
             }}
           >
             {children}

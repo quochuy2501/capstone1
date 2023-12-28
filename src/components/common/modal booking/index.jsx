@@ -11,6 +11,8 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [date, setDate] = useState();
+  const [selectedDay, setSelectedDay] = useState();
+
   const [errMsg, setErrMsg] = useState(null);
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -136,6 +138,27 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
     setErrMsg(null);
   };
 
+  const currentDate = new Date();
+  const currentHour = currentDate.getHours();
+
+  const checkSelectedDateisToday = () => {
+    const selectedDate = new Date(date);
+    if(
+      date &&
+      selectedDay === currentDate.getDate() &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getFullYear() === currentDate.getFullYear()
+
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+
+  };
+
+
+
   return (
     <Modal
       title="Đặt sân bóng:"
@@ -146,7 +169,13 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
       cancelText="Huỷ bỏ"
     >
       {isModalOpen && (
-        <DatePicker onChange={onChange} placeholder="chọn ngày đặt" />
+        <DatePicker 
+          onChange={onChange} 
+          placeholder="chọn ngày đặt" 
+          disabledDate={(current) => {
+            return current && current < dayjs().startOf('day');
+          }}
+        />
       )}
       {date &&
         !isLoading &&
@@ -202,7 +231,8 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
                                 ':'
                               )[0] ||
                             val >
-                              timeCanBookArr[selectedTimeIdx].end.split(':')[0]
+                              timeCanBookArr[selectedTimeIdx].end.split(':')[0] ||
+                              (checkSelectedDateisToday() && val < currentHour)
                         )
                     };
                   }}
