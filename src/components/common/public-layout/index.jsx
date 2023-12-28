@@ -8,7 +8,8 @@ const PublicLayout = ({ children }) => {
 
   return (
     <Suspense fallback={<LoadingLazyComponent />}>
-      {!user.role ? children : <Navigate to="/" />}
+      {/* {!user.role ? children : <Navigate to="/" />} */}
+      {user.role ? <Navigate to="/" />: children }
     </Suspense>
   );
 };

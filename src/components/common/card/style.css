@@ -1,0 +1,37 @@
+.card-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    width: fit-content;
+    /* height: 250px; */
+    padding: 1rem 2rem 1rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 0 0.5rem 0 rgba(0, 0, 0, 0.1);
+    @media (max-width: 1320px) {
+      width: 90%;
+    }
+  }
+  
+  .image-wrapper {
+    margin-bottom: 1rem;
+  }
+  
+  img {
+    width: 300px;
+    height: 100%;
+    border-radius: 0.5rem;
+  }
+  
+  .desc-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .btn-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
