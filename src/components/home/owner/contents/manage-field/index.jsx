@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Modal from "../modal";
 import useAxios from "../../../../../hooks/useAxios";
-import { Table, Space } from "antd";
+import { Table, Space, Tabs } from "antd";
+import OwnerBookScheduled from '../../../../owner-book-scheduled';
 
 const handleCategory = (id) => {
   if (id === 1) return "Sân 5";
@@ -16,6 +17,10 @@ const ManageField = ({ openNotification }) => {
   const [isLoading, setIsloading] = useState(false);
 
   const { api } = useAxios();
+
+  useEffect(() => {
+    getFootballFields();
+  }, [currentPage]);
 
   const columns = [
     {
@@ -120,23 +125,38 @@ const ManageField = ({ openNotification }) => {
     setIsloading(false);
   };
 
+  const items = [
+    {
+      key: '1',
+      label: 'Quản lý sân',
+      children: (
+        <Table
+          columns={columns}
+          dataSource={footballField}
+          loading={isLoading}
+          pagination={{
+            current: currentPage,
+            total: lastPage * 10,
+            onChange: (page) => setCurrentPage(page),
+            showSizeChanger: false
+          }}
+        />
+      )
+    },
+    {
+      key: '2',
+      label: 'Lịch đặt sân',
+      children: <OwnerBookScheduled />
+    }
+  ];
+
   useEffect(() => {
     getFootballFields();
   }, [currentPage]);
 
   return (
     <div>
-      <Table
-        columns={columns}
-        dataSource={footballField}
-        loading={isLoading}
-        pagination={{
-          current: currentPage,
-          total: lastPage * 10,
-          onChange: (page) => setCurrentPage(page),
-          showSizeChanger: false,
-        }}
-      />
+      <Tabs defaultActiveKey="1" items={items} />
     </div>
   );
 };

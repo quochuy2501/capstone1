@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Input, Select, Button, Pagination, DatePicker, Empty } from 'antd';
+import { Input, Select, Button, Pagination, DatePicker, Empty, notification } from 'antd';
 import Card from '../../common/card';
 import UserLayout from '../../common/user-layout';
 import useAxios from '../../../hooks/useAxios';
@@ -21,6 +21,13 @@ const User = () => {
   const [selectedWard, setSelectedWard] = useState(null);
   const [price, setPrice] = useState(0);
   const [date, setDate] = useState(null);
+  const [notificationApi, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type) => {
+    notificationApi[type]({
+      message: 'Đăng nhập thành công'
+    });
+  };
 
   const { width } = useResponsive();
   const { api } = useAxios();
@@ -28,7 +35,12 @@ const User = () => {
   useEffect(() => {
     (async () => {
       try {
+        if(localStorage.getItem('login-success')) {
+          openNotificationWithIcon('success');
+          localStorage.removeItem('login-success')
+        }
         const { data } = await api.get('/get-districts');
+        
         const _data = data.districts.map((d) => {
           return {
             value: d.id,
@@ -109,6 +121,7 @@ const User = () => {
     setCurrentPage(value);
   };
 
+
   const handleResetFilter = () => {
     setFieldName('');
     setDate(null);
@@ -118,9 +131,11 @@ const User = () => {
     setCategory(0);
   };
 
+
   const handleFilter = () => {
     getFootballField(currentPage);
   };
+
 
   const handleDateChange = (date) => {
     if (date) {
@@ -131,9 +146,10 @@ const User = () => {
     setCurrentPage(1);
     setTotalPage(null);
   };
-  console.log(date);
+
   return (
     <UserLayout>
+    {contextHolder}
       <h2>TÌM KIẾM SÂN BÓNG: </h2>
       <div className="filter-wrapper">
         <div>

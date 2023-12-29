@@ -18,48 +18,54 @@ const { RangePicker } = TimePicker;
 
 const initialOpens = [
   {
-    id: "Mon",
-    value: "close",
-    label: "Thứ hai",
+    id: 'Mon',
+    value: 'close',
+    label: 'Thứ hai',
     startTime: null,
-    endTime: null,
-  },
-  { id: 2, value: "close", label: "Thứ ba", startTime: null, endTime: null },
-  {
-    id: 3,
-    value: "close",
-    label: "Thứ tư",
-    startTime: null,
-    endTime: null,
+    endTime: null
   },
   {
-    id: 4,
-    value: "close",
-    label: "Thứ năm",
+    id: 'Tue',
+    value: 'close',
+    label: 'Thứ ba',
     startTime: null,
-    endTime: null,
+    endTime: null
   },
   {
-    id: 5,
-    value: "close",
-    label: "Thứ sáu",
+    id: 'Wed',
+    value: 'close',
+    label: 'Thứ tư',
     startTime: null,
-    endTime: null,
+    endTime: null
   },
   {
-    id: 6,
-    value: "close",
-    label: "Thứ bảy",
+    id: 'Thu',
+    value: 'close',
+    label: 'Thứ năm',
     startTime: null,
-    endTime: null,
+    endTime: null
   },
   {
-    id: 7,
-    value: "close",
-    label: "Chủ nhật",
+    id: 'Fri',
+    value: 'close',
+    label: 'Thứ sáu',
     startTime: null,
-    endTime: null,
+    endTime: null
   },
+  {
+    id: 'Sat',
+    value: 'close',
+    label: 'Thứ bảy',
+    startTime: null,
+    endTime: null
+  },
+  {
+    id: 'Sun',
+    value: 'close',
+    label: 'Chủ nhật',
+    startTime: null,
+    endTime: null
+  }
 ];
 
 const CreateField = ({
@@ -124,6 +130,7 @@ const CreateField = ({
     formData.append("detailed_schedule", JSON.stringify(opens));
     formData.append("describe", description);
     formData.append("id_category", category);
+
     try {
       await api.post(
         `/owner/football-pitch/${editMode ? "update" : "create"}`,
@@ -171,11 +178,24 @@ const CreateField = ({
     setOpens(newOpens);
   };
 
-  const handleOpenTimeChange = (value) => {
+   const handleOpenTimeChange = (_, timeString) => {
+    const [startTime, endTime] = timeString;
+    const startHour = +startTime.split(':')[0];
+    const startMin = startTime.split(':')[1];
+    const endHour = endTime.split(':')[0];
+    const endMin = endTime.split(':')[1];
+
     const newOpens = [...opens];
     const index = newOpens.findIndex((val) => val.id === indexForRangePicker);
-    newOpens[index].startTime = `${value[0].$H}:${value[0].$m}`;
-    newOpens[index].endTime = `${value[1].$H}:${value[1].$m}`;
+
+    newOpens[index].startTime = `${
+      startHour < 10 ? '0' + startHour : startHour
+    }:${startMin}`;
+
+    newOpens[index].endTime = `${
+      endHour < 10 ? '0' + endHour : endHour
+    }:${endMin}`;
+
     setOpens(newOpens);
   };
 
