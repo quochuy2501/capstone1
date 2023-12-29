@@ -22,12 +22,22 @@ const User = () => {
   const [price, setPrice] = useState(0);
   const [date, setDate] = useState(null);
 
+  const openNotificationWithIcon = (type) => {
+    notificationApi[type]({
+      message: 'Đăng nhập thành công'
+    });
+  };
+
   const { width } = useResponsive();
   const { api } = useAxios();
 
   useEffect(() => {
     (async () => {
       try {
+        if(localStorage.getItem('login-success')) {
+          openNotificationWithIcon('success');
+          localStorage.removeItem('login-success')
+        }
         const { data } = await api.get('/get-districts');
         const _data = data.districts.map((d) => {
           return {
