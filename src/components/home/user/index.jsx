@@ -29,6 +29,12 @@ const User = () => {
     });
   };
 
+  const openNotificationWithIcon = (type) => {
+    notificationApi[type]({
+      message: 'Đăng nhập thành công'
+    });
+  };
+
   const { width } = useResponsive();
   const { api } = useAxios();
 
