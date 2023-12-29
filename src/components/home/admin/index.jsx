@@ -3,7 +3,7 @@ import DashBoardLayout from "../../common/dashboard-layout";
 import { UserOutlined } from "@ant-design/icons";
 import ManageUsers from "./contents/manage-users";
 import ManageOwners from "./contents/manage-owners";
-import ManageSchedule from "./contents/manage-schedule";
+// import ManageSchedule from "./contents/manage-schedule";
 
 const Admin = () => {
   const [selectedKey, setSelectedKey] = useState(["0"]);
