@@ -29,12 +29,6 @@ const User = () => {
     });
   };
 
-  const openNotificationWithIcon = (type) => {
-    notificationApi[type]({
-      message: 'Đăng nhập thành công'
-    });
-  };
-
   const { width } = useResponsive();
   const { api } = useAxios();
 
@@ -127,7 +121,6 @@ const User = () => {
     setCurrentPage(value);
   };
 
-
   const handleResetFilter = () => {
     setFieldName('');
     setDate(null);
@@ -137,11 +130,9 @@ const User = () => {
     setCategory(0);
   };
 
-
   const handleFilter = () => {
     getFootballField(currentPage);
   };
-
 
   const handleDateChange = (date) => {
     if (date) {

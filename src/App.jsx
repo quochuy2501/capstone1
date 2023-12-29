@@ -1,7 +1,6 @@
-import { useState, lazy } from "react";
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PrivateRoutes, PublicRoutes } from "./routers";
-import { useGlobalContext } from "./contexts/GlobalContext";
 import PublicLayout from "./components/common/public-layout";
 import PrivateLayout from "./components/common/private-layout";
 import "./App.css";
@@ -9,16 +8,11 @@ import "./App.css";
 const Components = {};
 
 PublicRoutes.concat(PrivateRoutes).forEach((route) => {
-  Components[route.component] = lazy(() =>
+  Components[route.component] = lazy(() => // lazy cho phép ứng dụng chỉ tải thành phần cần thiết khi cần sử dụng
     import(`./pages/${route.component}`)
   );
 });
-
 function App() {
-  const { user } = useGlobalContext();
-
-  console.log(user, "user");
-
   return (
     <Routes>
       {PublicRoutes.map((route, index) => {
