@@ -32,8 +32,8 @@ const UserLayout = ({ children }) => {
       key: '1',
       label: (
         <a
-          rel="noopener noreferrer"
-          role="button"
+          // rel="noopener noreferrer"
+          // role="button"
           onClick={() => navigate('/history')}
         >
           Lịch sử thanh toán
@@ -44,8 +44,8 @@ const UserLayout = ({ children }) => {
       key: '2',
       label: (
         <a
-          rel="noopener noreferrer"
-          role="button"
+          // rel="noopener noreferrer"
+          // role="button"
           onClick={() => navigate('/booked-schedule')}
         >
           Lịch đặt sân

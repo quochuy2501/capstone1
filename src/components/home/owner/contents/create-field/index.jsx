@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Button,
   Form,
@@ -7,12 +7,12 @@ import {
   Upload,
   TimePicker,
   Spin,
-  Space,
-} from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import useAxios from "../../../../../hooks/useAxios";
-import Editor from "../../../../common/editor";
-import dayjs from "dayjs";
+  Space
+} from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import useAxios from '../../../../../hooks/useAxios';
+import Editor from '../../../../common/editor';
+import dayjs from 'dayjs';
 
 const { RangePicker } = TimePicker;
 
@@ -75,11 +75,11 @@ const CreateField = ({
   setIsModalOpen,
   getFootballFields,
   setSelectedKey,
-  openNotification,
+  openNotification
 }) => {
-  const [fieldName, setFieldName] = useState(currentField?.name || "");
-  const [price, setPrice] = useState(currentField?.price || "");
-  const [description, setDescription] = useState(currentField?.describe || "");
+  const [fieldName, setFieldName] = useState(currentField?.name || '');
+  const [price, setPrice] = useState(currentField?.price || '');
+  const [description, setDescription] = useState(currentField?.describe || '');
   const [opens, setOpens] = useState(
     currentField?.detailed_schedule || initialOpens
   );
@@ -90,7 +90,7 @@ const CreateField = ({
     editMode
       ? currentField?.image.map((img) => {
           return {
-            url: img,
+            url: img
           };
         })
       : []
@@ -103,12 +103,12 @@ const CreateField = ({
     (async () => {
       setLoading(true);
       try {
-        const { data } = await api.get("/get-category");
+        const { data } = await api.get('/get-category');
         setCategories(
           data.categories.map((d) => {
             return {
               value: d.id,
-              label: d.name_category,
+              label: d.name_category
             };
           })
         );
@@ -121,32 +121,32 @@ const CreateField = ({
 
   const onFinish = async () => {
     const formData = new FormData();
-    formData.append("id", currentField?.id || null);
-    formData.append("name", fieldName);
+    formData.append('id', currentField?.id || null);
+    formData.append('name', fieldName);
     fileList.forEach((file, idx) => {
       formData.append(`image_${idx}`, file.url || file.originFileObj);
     });
-    formData.append("price", price);
-    formData.append("detailed_schedule", JSON.stringify(opens));
-    formData.append("describe", description);
-    formData.append("id_category", category);
+    formData.append('price', price);
+    formData.append('detailed_schedule', JSON.stringify(opens));
+    formData.append('describe', description);
+    formData.append('id_category', category);
 
     try {
       await api.post(
-        `/owner/football-pitch/${editMode ? "update" : "create"}`,
+        `/owner/football-pitch/${editMode ? 'update' : 'create'}`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
+            'Content-Type': 'multipart/form-data'
+          }
         }
       );
       openNotification(
-        "Thành công",
-        `${editMode ? "Chỉnh sửa" : "Tạo"} sân bóng thành công!`
+        'Thành công',
+        `${editMode ? 'Chỉnh sửa' : 'Tạo'} sân bóng thành công!`
       );
       if (!editMode) {
-        setSelectedKey(["2"]);
+        setSelectedKey(['2']);
       }
       setIsModalOpen(false);
       getFootballFields();
@@ -156,7 +156,7 @@ const CreateField = ({
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
 
   const handleFileChange = async ({ fileList }) => {
@@ -166,10 +166,10 @@ const CreateField = ({
   const handleOpenDateChange = (value, { id }) => {
     const newOpens = [...opens];
     const index = newOpens.findIndex((val) => val.id === id);
-    if (value === "open") {
+    if (value === 'open') {
       newOpens[index].value = value;
-      newOpens[index].startTime = "7:0";
-      newOpens[index].endTime = "22:0";
+      newOpens[index].startTime = '07:00';
+      newOpens[index].endTime = '22:00';
     } else {
       newOpens[index].value = value;
       newOpens[index].startTime = null;
@@ -178,7 +178,7 @@ const CreateField = ({
     setOpens(newOpens);
   };
 
-   const handleOpenTimeChange = (_, timeString) => {
+  const handleOpenTimeChange = (_, timeString) => {
     const [startTime, endTime] = timeString;
     const startHour = +startTime.split(':')[0];
     const startMin = startTime.split(':')[1];
@@ -202,7 +202,7 @@ const CreateField = ({
   const handleDeleteField = async () => {
     try {
       await api.get(`/owner/football-pitch/destroy/${currentFieldId}`);
-      openNotification("Thành công", "Xoá sân bóng thành công!");
+      openNotification('Thành công', 'Xoá sân bóng thành công!');
       setIsModalOpen(false);
       getFootballFields();
     } catch (error) {
@@ -215,7 +215,7 @@ const CreateField = ({
       <PlusOutlined />
       <div
         style={{
-          marginTop: 8,
+          marginTop: 8
         }}
       >
         Upload
@@ -228,11 +228,11 @@ const CreateField = ({
       {loading ? (
         <div
           style={{
-            width: "100%",
-            height: "70vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            width: '100%',
+            height: '70vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
           <Spin />
@@ -241,17 +241,17 @@ const CreateField = ({
         <Form
           name="basic"
           initialValues={{
-            remember: true,
+            remember: true
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           layout="vertical"
           style={{
-            display: "grid",
-            gridTemplateColumns: editMode ? "450px" : "450px 450px",
-            gap: "20px",
-            padding: "20px",
+            display: 'grid',
+            gridTemplateColumns: editMode ? '450px' : '450px 450px',
+            gap: '20px',
+            padding: '20px'
           }}
         >
           <Form.Item
@@ -261,12 +261,12 @@ const CreateField = ({
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập vào tên sân bóng!",
+                message: 'Vui lòng nhập vào tên sân bóng!'
               },
               {
-                pattern: "^[^!@#$%^&*()]+$",
-                message: "Tên sân bóng không được chứa số và ký tự đặc biêt!",
-              },
+                pattern: '^[^!@#$%^&*()]+$',
+                message: 'Tên sân bóng không được chứa số và ký tự đặc biêt!'
+              }
             ]}
           >
             <Input
@@ -282,8 +282,8 @@ const CreateField = ({
             rules={[
               {
                 required: true,
-                message: "Vui lòng loại sân bóng!",
-              },
+                message: 'Vui lòng loại sân bóng!'
+              }
             ]}
           >
             <Select
@@ -300,8 +300,8 @@ const CreateField = ({
             rules={[
               {
                 required: true,
-                message: "Vui lòng nhập vào giá tiền!",
-              },
+                message: 'Vui lòng nhập vào giá tiền!'
+              }
             ]}
           >
             <Input value={price} onChange={(e) => setPrice(e.target.value)} />
@@ -314,8 +314,8 @@ const CreateField = ({
             rules={[
               {
                 required: true,
-                message: "Vui lòng chọn ảnh sân bóng!",
-              },
+                message: 'Vui lòng chọn ảnh sân bóng!'
+              }
             ]}
           >
             <Upload
@@ -338,7 +338,7 @@ const CreateField = ({
             //     message: "Vui lòng nhập vào mô tả sân bóng!",
             //   },
             // ]}
-            style={{ gridColumn: editMode ? "" : "1/3" }}
+            style={{ gridColumn: editMode ? '' : '1/3' }}
           >
             <Editor
               value={description}
@@ -349,32 +349,32 @@ const CreateField = ({
           {opens.map((val) => {
             return (
               <div key={val.id}>
-                <h4 style={{ margin: "15px 0 10px 0" }}>{val.label}:</h4>
+                <h4 style={{ margin: '15px 0 10px 0' }}>{val.label}:</h4>
                 <Select
                   onChange={handleOpenDateChange}
                   style={{
-                    width: val.value === "open" ? "34%" : "100%",
-                    marginBottom: "10px",
+                    width: val.value === 'open' ? '34%' : '100%',
+                    marginBottom: '10px'
                   }}
                   value={val.value}
                   name={val.id}
                   options={[
                     {
-                      value: "open",
-                      label: "Mở",
-                      id: val.id,
+                      value: 'open',
+                      label: 'Mở',
+                      id: val.id
                     },
                     {
-                      value: "close",
-                      label: "Đóng",
-                      id: val.id,
-                    },
+                      value: 'close',
+                      label: 'Đóng',
+                      id: val.id
+                    }
                   ]}
                 />
-                {val.value === "open" && (
+                {val.value === 'open' && (
                   <RangePicker
-                    disabled={val.value === "close" ? true : false}
-                    style={{ marginLeft: "20px" }}
+                    disabled={val.value === 'close' ? true : false}
+                    style={{ marginLeft: '20px' }}
                     format="H:mm"
                     hideDisabledOptions={true}
                     onChange={handleOpenTimeChange}
@@ -382,8 +382,8 @@ const CreateField = ({
                     value={
                       val.startTime && val.endTime
                         ? [
-                            dayjs(val.startTime, "HH:mm"),
-                            dayjs(val.endTime, "HH:mm"),
+                            dayjs(val.startTime, 'HH:mm'),
+                            dayjs(val.endTime, 'HH:mm')
                           ]
                         : []
                     }
@@ -393,7 +393,7 @@ const CreateField = ({
                           Array.from(
                             { length: 61 },
                             (_, index) => index
-                          ).filter((val) => val !== 30 && val !== 0),
+                          ).filter((val) => val !== 30 && val !== 0)
                       };
                     }}
                   />
@@ -403,15 +403,15 @@ const CreateField = ({
           })}
           <div
             style={{
-              width: "99%",
-              display: "flex",
-              justifyContent: "flex-end",
+              width: '99%',
+              display: 'flex',
+              justifyContent: 'flex-end'
             }}
           >
             <Space size="middle">
               {editMode && (
                 <Button
-                  style={{ marginTop: "20px" }}
+                  style={{ marginTop: '20px' }}
                   onClick={handleDeleteField}
                 >
                   Xoá sân
@@ -420,9 +420,9 @@ const CreateField = ({
               <Button
                 type="primary"
                 htmlType="submit"
-                style={{ marginTop: "20px" }}
+                style={{ marginTop: '20px' }}
               >
-                {editMode ? "Chỉnh sửa" : "Tạo sân"}
+                {editMode ? 'Chỉnh sửa' : 'Tạo sân'}
               </Button>
             </Space>
           </div>

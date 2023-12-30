@@ -8,7 +8,6 @@ import useAxios from '../../hooks/useAxios';
 import { useParams, Link } from 'react-router-dom';
 import ModalBooking from '../../components/common/modal-booking';
 import './index.css';
-
 function formatVietnameseMoney(number) {
   // Chuyển đổi số thành chuỗi và loại bỏ dấu phẩy nếu có
   const numberString = number.toString().replace(/,/g, '');
@@ -103,7 +102,6 @@ const PitchDetail = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  console.log(pitchAround);
   return (
     <div>
       <UserLayout>

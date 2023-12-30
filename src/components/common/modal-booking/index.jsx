@@ -114,6 +114,7 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
       setDate(
         `${dateArr[0]} ${dateArr[1]} ${dateArr[2]} ${dateArr[4]} MST ${dateArr[3]}`
       );
+      setSelectedDay(date.$D);
       setIsLoading(true);
     } else {
       setDate(null);
@@ -143,22 +144,18 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
 
   const checkSelectedDateisToday = () => {
     const selectedDate = new Date(date);
-    if(
+    if (
       date &&
       selectedDay === currentDate.getDate() &&
       selectedDate.getMonth() === currentDate.getMonth() &&
       selectedDate.getFullYear() === currentDate.getFullYear()
-
     ) {
       return true;
     } else {
       return false;
     }
-
   };
-
-
-
+  console.log(currentHour);
   return (
     <Modal
       title="Đặt sân bóng:"
@@ -169,9 +166,9 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
       cancelText="Huỷ bỏ"
     >
       {isModalOpen && (
-        <DatePicker 
-          onChange={onChange} 
-          placeholder="chọn ngày đặt" 
+        <DatePicker
+          onChange={onChange}
+          placeholder="chọn ngày đặt"
           disabledDate={(current) => {
             return current && current < dayjs().startOf('day');
           }}
@@ -192,19 +189,27 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
                 gap: '4px'
               }}
             >
-              {timeCanBookArr.map((time, idx) => (
-                <Button
-                  key={idx}
-                  onClick={() => {
-                    setStartTime(null);
-                    setEndTime(null);
-                    setSelectedTimeIdx(idx);
-                  }}
-                  type={idx === selectedTimeIdx ? 'primary' : 'default'}
-                >
-                  {time.start} <ArrowRightOutlined /> {time.end}
-                </Button>
-              ))}
+              {timeCanBookArr.map((time, idx) => {
+                return (
+                  <>
+                    <Button
+                      disabled={
+                        selectedDay === currentDate.getDate() &&
+                        currentHour >= +time.end.split(':')[0]
+                      }
+                      key={idx}
+                      onClick={() => {
+                        setStartTime(null);
+                        setEndTime(null);
+                        setSelectedTimeIdx(idx);
+                      }}
+                      type={idx === selectedTimeIdx ? 'primary' : 'default'}
+                    >
+                      {time.start} <ArrowRightOutlined /> {time.end}
+                    </Button>
+                  </>
+                );
+              })}
             </div>
             {selectedTimeIdx !== null && (
               <>
@@ -219,10 +224,12 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
                   }
                   disabledTime={() => {
                     return {
-                      disabledMinutes: () =>
-                        Array.from({ length: 61 }, (_, index) => index).filter(
-                          (val) => val !== 30 && val !== 0
-                        ),
+                      disabledMinutes: () => {
+                        return Array.from(
+                          { length: 61 },
+                          (_, index) => index
+                        ).filter((val) => val !== 30 && val !== 0);
+                      },
                       disabledHours: () =>
                         Array.from({ length: 24 }, (_, index) => index).filter(
                           (val) =>
@@ -231,8 +238,10 @@ const ModalBooking = ({ id, isModalOpen, handleCancel }) => {
                                 ':'
                               )[0] ||
                             val >
-                              timeCanBookArr[selectedTimeIdx].end.split(':')[0] ||
-                              (checkSelectedDateisToday() && val < currentHour)
+                              timeCanBookArr[selectedTimeIdx].end.split(
+                                ':'
+                              )[0] ||
+                            (checkSelectedDateisToday() && val <= currentHour)
                         )
                     };
                   }}
