@@ -26,11 +26,11 @@ const CATEGORY = {
 };
 
 const Card = ({ field }) => {
-  const { image, describe, price, name, id_category, id } = field;
+  const { image, describe, price, name, id_category, id, address, name_ward, name_district  } = field;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgae1, setImage1] = useState('')
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const imageArray = image.split(",");
     if(imageArray.length >1) {
@@ -69,7 +69,7 @@ const Card = ({ field }) => {
               {name}
             </Title>
             <Paragraph>
-              <strong>Địa chỉ:</strong> 03 Quang Trung, Hải Châu, Đà Nẵng
+              <strong>Địa chỉ:</strong> {address}, {name_ward}, {name_district}, Đà Nẵng
             </Paragraph>
             <Paragraph style={{ display: 'flex', gap: '5px' }}>
               <strong>Mô tả:</strong>
